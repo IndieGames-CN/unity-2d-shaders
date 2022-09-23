@@ -18,25 +18,10 @@ namespace Game.UI.Effects
         private RectTransform m_Rect;
         private MaskShapeEvents m_Events;
 
-        /// <summary>
-        /// 遮罩缩放
-        /// </summary>
         private float m_Scale = 1.1f;
-        /// <summary>
-        /// 材质
-        /// </summary>
         protected Material m_Material;
-        /// <summary>
-        /// 中心点
-        /// </summary>
         protected Vector2 m_Center;
-        /// <summary>
-        /// 目标边界
-        /// </summary>
         protected Vector3[] m_TargetCorners = new Vector3[4];
-        /// <summary>
-        /// 目标大小
-        /// </summary>
         protected Vector2 m_TargetSize = Vector2.zero;
 
         void Awake()

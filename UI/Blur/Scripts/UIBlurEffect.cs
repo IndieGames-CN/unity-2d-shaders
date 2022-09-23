@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using UnityEngine;
-using GameFramework;
 
 namespace Game.UI.Effects
 {
@@ -13,120 +11,76 @@ namespace Game.UI.Effects
         public int BlurDownSample = 4;
     }
 
-    [ExecuteAlways]
+    [ExecuteInEditMode]
     public class UIBlurEffect : MonoBehaviour
     {
-        private static UIBlurEffect _instance;
+        private static UIBlurEffect m_instance;
         public static UIBlurEffect Instance
         {
             get
             {
-                if (_instance == null)
+                if (m_instance == null)
                 {
-                    var uiCamera = GameObject.Find("UIRoot/UICamera");
-                    if (uiCamera != null)
+                    m_instance = GameObject.FindObjectOfType<UIBlurEffect>();
+                    if (m_instance == null)
                     {
-                        _instance = uiCamera.GetComponent<UIBlurEffect>();
-                        if (_instance == null)
-                        {
-                            _instance = uiCamera.AddComponent<UIBlurEffect>();
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogError("No UI camera found");
+                        m_instance = Camera.main.gameObject.AddComponent<UIBlurEffect>();
                     }
                 }
-                return _instance;
+                return m_instance;
             }
         }
 
         private const int kBlurHorPass = 0;
         private const int kBlurVerPass = 1;
 
-        private RenderTexture m_TempRT;
-        private RenderTexture m_FinalRT;
         private Material m_BlurMat;
-
-        [Range(0, 10)]
-        public float m_BlurSize = 1.0f;
-        [Range(1, 10)]
-        public int m_BlurIteration = 4;
-        public float m_BlurSpread = 1;
-        public int m_BlurDownSample = 4;
-        public bool m_RenderBlurEffect = false;
-
+        private BlurData m_RenderData;
+        private bool m_RenderBlurEffect = false;
         private Action<RenderTexture> m_OnRenderer;
 
         void Awake()
         {
-            m_BlurMat = GameAPI.LoadAsset<Material>("UIBlur", "ui/materials");
-            if (m_BlurMat == null)
-            {
-                Debug.LogError("The Blur shader was not found");
-            }
-            _instance = this;
+            m_instance = this;
+            m_BlurMat = new Material(Shader.Find("UI/Blur"));
         }
 
         void OnRenderImage(RenderTexture src, RenderTexture dest)
         {
-            if (m_RenderBlurEffect && m_BlurMat != null)
+            if (m_RenderBlurEffect)
             {
-                var width = src.width / m_BlurDownSample;
-                var height = src.height / m_BlurDownSample;
+                var width = src.width / m_RenderData.BlurDownSample;
+                var height = src.height / m_RenderData.BlurDownSample;
 
-                if (m_FinalRT != null)
+                var finalRT = RenderTexture.GetTemporary(width, height);
+                Graphics.Blit(src, finalRT);
+
+                for (var i = 0; i < m_RenderData.BlurIteration; i++)
                 {
-                    RenderTexture.ReleaseTemporary(m_FinalRT);
-                    m_FinalRT = null;
+                    var tempRT = RenderTexture.GetTemporary(width, height, 0);
+                    m_BlurMat.SetFloat("_BlurSize", (1 + i * m_RenderData.BlurSpread) * m_RenderData.BlurSize);
+                    Graphics.Blit(finalRT, tempRT, m_BlurMat, kBlurHorPass);
+                    Graphics.Blit(tempRT, finalRT, m_BlurMat, kBlurVerPass);
+                    RenderTexture.ReleaseTemporary(tempRT);
                 }
 
-                m_FinalRT = RenderTexture.GetTemporary(width, height);
-                Graphics.Blit(src, m_FinalRT);
-
-                for (var i = 0; i < m_BlurIteration; i++)
-                {
-                    m_BlurMat.SetFloat("_BlurSize", (1 + i * m_BlurSpread) * m_BlurSize);
-                    m_TempRT = RenderTexture.GetTemporary(width, height, 0);
-                    Graphics.Blit(m_FinalRT, m_TempRT, m_BlurMat, kBlurHorPass);
-                    Graphics.Blit(m_TempRT, m_FinalRT, m_BlurMat, kBlurVerPass);
-                    RenderTexture.ReleaseTemporary(m_TempRT);
-                }
-
-                OnRTComplete();
+                OnRenderComplete(finalRT);
             }
             Graphics.Blit(src, dest);
         }
 
-        void OnRTComplete()
+        void OnRenderComplete(RenderTexture rt)
         {
-            if (m_OnRenderer != null)
-            {
-                m_OnRenderer?.Invoke(m_FinalRT);
-                m_OnRenderer = null;
-            }
+            m_OnRenderer?.Invoke(rt);
+            m_OnRenderer = null;
             m_RenderBlurEffect = false;
         }
 
-        public void ShowRenderImage(Action<RenderTexture> onRenderer, BlurData data = null)
+        public void ShowRenderImage(Action<RenderTexture> onRenderer, BlurData data)
         {
-            StartCoroutine(SetRenderImage(onRenderer, data));
-        }
-
-        IEnumerator SetRenderImage(Action<RenderTexture> onRenderer, BlurData data = null)
-        {
-            yield return null;
-
-            if (data != null)
-            {
-                m_BlurSize = data.BlurSize;
-                m_BlurIteration = data.BlurIteration;
-                m_BlurDownSample = data.BlurDownSample;
-                m_BlurSpread = data.BlurSpread;
-            }
-
-            m_RenderBlurEffect = true;
+            m_RenderData = data;
             m_OnRenderer += onRenderer;
+            m_RenderBlurEffect = true;
         }
     }
 }

@@ -1,23 +1,20 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using XLua;
 
 namespace Game.UI.Effects
 {
+    [RequireComponent(typeof(Camera))]
     public class CircleWipe : MonoBehaviour
     {
-        private const float MaxRadius = 2;
-
-        [SerializeField]
-        private Shader shader;
-        private Material _material;
+        private const float kMaxRadius = 2;
 
         [SerializeField]
         private float fadeDuration = 1f;
         [SerializeField]
         private Color fadeColour = Color.black;
 
+        private Material _material;
         private bool _isFading;
         private float _radius = 0f;
         private Vector2 _offset;
@@ -25,8 +22,8 @@ namespace Game.UI.Effects
 
         void Awake()
         {
-            _material = new Material(shader);
-            _screenRatio = new Vector2(1, Screen.height*1f/Screen.width);
+            _material = new Material(Shader.Find("UI/Circle Wipe"));
+            _screenRatio = new Vector2(1, Screen.height * 1f / Screen.width);
         }
 
         private void OnRenderImage(RenderTexture src, RenderTexture dest)
@@ -44,7 +41,7 @@ namespace Game.UI.Effects
 
         public Color FadeColor
         {
-            set 
+            set
             {
                 fadeColour = value;
             }
@@ -60,7 +57,7 @@ namespace Game.UI.Effects
 
         public bool Enabled
         {
-            set 
+            set
             {
                 _isFading = false;
             }
@@ -70,12 +67,12 @@ namespace Game.UI.Effects
             }
         }
 
-        public void FadeOut(Action onComplete = null)
+        public void FadeIn(Action onComplete = null)
         {
-            FadeOut(onComplete, Vector3.zero, 0);
+            FadeIn(onComplete, Vector3.zero, 0);
         }
 
-        public void FadeOut(Action onComplete, Vector2 wipeOffset, float wipeRadius)
+        public void FadeIn(Action onComplete, Vector2 wipeOffset, float wipeRadius)
         {
             if (_isFading)
             {
@@ -84,8 +81,9 @@ namespace Game.UI.Effects
 
             _isFading = true;
             _offset = wipeOffset;
-            
-            StartCoroutine(DoFade(MaxRadius, wipeRadius, () => {
+
+            StartCoroutine(DoFade(kMaxRadius, wipeRadius, () =>
+            {
                 if (onComplete != null)
                 {
                     onComplete();
@@ -93,14 +91,14 @@ namespace Game.UI.Effects
             }));
         }
 
-        public void FadeIn(Action onComplete)
+        public void FadeOut(Action onComplete = null)
         {
             if (!_isFading)
             {
                 return;
             }
 
-            StartCoroutine(DoFade(0, MaxRadius, () =>
+            StartCoroutine(DoFade(0, kMaxRadius, () =>
             {
                 _isFading = false;
                 if (onComplete != null)

@@ -3,6 +3,8 @@ using UnityEngine.UI;
 
 namespace Game.UI.Effects
 {
+    [RequireComponent(typeof(RawImage))]
+    [ExecuteAlways]
     public class UIBlur : MonoBehaviour
     {
         private RawImage m_RawImage;
@@ -18,13 +20,13 @@ namespace Game.UI.Effects
 
         void Awake()
         {
-            m_RawImage = gameObject.AddComponent<RawImage>();
+            m_RawImage = gameObject.GetComponent<RawImage>();
             m_RawImage.color = m_BlurColor;
         }
 
         void OnEnable()
         {
-            if (m_RendererTexture == null)
+            if (m_RawImage.texture == null)
             {
                 SetBlurImage();
             }
@@ -32,10 +34,13 @@ namespace Game.UI.Effects
 
         void OnDisable()
         {
-            m_RendererTexture = null;
+            if (m_RendererTexture != null)
+            {
+                RenderTexture.ReleaseTemporary(m_RendererTexture);
+            }
         }
 
-        void SetBlurImage()
+        public void SetBlurImage()
         {
             var blurEffect = UIBlurEffect.Instance;
             if (blurEffect == null)
@@ -43,7 +48,6 @@ namespace Game.UI.Effects
                 return;
             }
 
-            transform.parent.gameObject.SetActive(false);
             blurEffect.ShowRenderImage(OnBlurRenderer, new BlurData()
             {
                 BlurSize = m_BlurSize,
@@ -55,15 +59,12 @@ namespace Game.UI.Effects
 
         void OnBlurRenderer(RenderTexture rt)
         {
-            if (m_RendererTexture != null)
+            if (m_RendererTexture != rt)
             {
                 RenderTexture.ReleaseTemporary(m_RendererTexture);
-                m_RendererTexture = null;
             }
             m_RendererTexture = rt;
             m_RawImage.texture = rt;
-
-            transform.parent.gameObject.SetActive(true);
         }
     }
 }
