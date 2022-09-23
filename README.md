@@ -8,22 +8,23 @@ Open menu `"Window/Package Manager"` with your unity editor. Add package from gi
 https://github.com/IndieGames-CN/unity-2d-shaders.git
 ```
 
-## UI
+## Shaders
+
+### UI
 
 * [UI Gray](./UI/Gray/Shaders/UIGray.shader)
-![UI Gray](./Doc/Images/Gray.png)
-
 * [UI Blur](./UI/Blur/Shaders/UIBlur.shader)
-![Outline](./Doc/Images/Blur.png)
-
-* [UI Circle Mask](./UI/Masks/Shaders/CircleMaskShape.shader)
-![Outline](./Doc/Images/CircleWipe.gif)
-
+* [UI Circle Wipe](./UI/CircleWipe/Shaders/CircleWipe.shader)
+* [UI Cicle Mask](./UI/Masks/Shaders/CircleMaskShape.shader)
 * [UI Rect Mask](./UI/Masks/Shaders/RectMaskShape.shader)
-![Outline](./Doc/Images/Mask_Circle.png)
-![Outline](./Doc/Images/Mask_Rect.png)
 
-## Sprites
+### Sprites
 
 * [Outline](./Sprite/SpriteOutline.shader)
-![Outline](./Doc/Images/Sprite_Outline.png)
+
+## Preview
+
+||||
+|  ----  | ----  | ----  |
+| UI Gray ![UI Gray](./Doc/Images/Gray.png)  | UI Blur ![Blur](./Doc/Images/Blur.png) | Circle Wipe ![Circle Wipe](./Doc/Images/CircleWipe.gif) |
+| Circle Mask ![Outline](./Doc/Images/Mask_Circle.png)  | Rect Mask ![Outline](./Doc/Images/Mask_Rect.png) | Outline ![Outline](./Doc/Images/Sprite_Outline.png) |
