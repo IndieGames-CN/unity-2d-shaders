@@ -12,7 +12,6 @@ https://github.com/IndieGames-CN/unity-2d-shaders.git
 
 ### UI
 
-* [UI Gray](./UI/Gray/Shaders/UIGray.shader)
 * [UI Blur](./UI/Blur/Shaders/UIBlur.shader)
 * [UI Circle Wipe](./UI/CircleWipe/Shaders/CircleWipe.shader)
 * [UI Cicle Mask](./UI/Masks/Shaders/CircleMaskShape.shader)
@@ -20,11 +19,13 @@ https://github.com/IndieGames-CN/unity-2d-shaders.git
 
 ### Sprites
 
-* [Outline](./Sprite/SpriteOutline.shader)
+* [Outline](./Sprites/SpriteOutline.shader)
+* [Gray](./Sprites/Gray/Shaders/SpriteGray.shader)
 
 ## Preview
 
 ||||
 |  ----  | ----  | ----  |
-| UI Gray ![UI Gray](./Doc/Images/Gray.png)  | UI Blur ![Blur](./Doc/Images/Blur.png) | Circle Wipe ![Circle Wipe](./Doc/Images/CircleWipe.gif) |
-| Circle Mask ![Outline](./Doc/Images/Mask_Circle.png)  | Rect Mask ![Outline](./Doc/Images/Mask_Rect.png) | Outline ![Outline](./Doc/Images/Sprite_Outline.png) |
+| UI Blur ![Blur](./Doc/Images/Blur.png) | Circle Wipe ![Circle Wipe](./Doc/Images/CircleWipe.gif) |
+| Circle Mask ![Outline](./Doc/Images/Mask_Circle.png)  | Rect Mask ![Outline](./Doc/Images/Mask_Rect.png) 
+| Outline ![Outline](./Doc/Images/Sprite_Outline.png) | Gray ![Gray](./Doc/Images/Gray.png)  

@@ -1,4 +1,4 @@
-Shader "UI/Gray"
+Shader "Sprites/Gray"
 {
     Properties
     {
