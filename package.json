@@ -1,0 +1,16 @@
+{
+    "name": "com.igcn.2d-shaders",
+    "version": "0.1.0",
+    "displayName": "Unity 2D Shaders",
+    "unity": "2018.3",
+    "dependencies": {
+      "com.unity.editorcoroutines": "1.0.0"
+    },
+    "author": {
+      "name": "Veinin",
+      "url": "https://github.com/Veinin"
+    },
+    "repository": "https://github.com/IndieGames-CN/unity-2d-shaders.git",
+    "license": "MIT",
+    "type": "shaders"
+  }
